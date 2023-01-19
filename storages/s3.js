@@ -1,7 +1,15 @@
 const { S3Client, GetObjectCommand, PutObjectCommand } = require('@aws-sdk/client-s3');
 const debug = require('debug')('citizen:server');
 
-const s3client = new S3Client({});
+const S3_CUSTOM_ENDPOINT= process.env.CITIZEN_STORAGE_S3_CUSTOM_ENDPOINT
+if (!S3_CUSTOM_ENDPOINT) {
+  const s3client = new S3Client({});
+
+} else {
+  debug(`setting S3 custom endpoint ${S3_CUSTOM_ENDPOINT}.`);
+  const s3client = new S3Client({endpoint:S3_CUSTOM_ENDPOINT});
+
+}
 
 const S3_BUCKET = process.env.CITIZEN_STORAGE_BUCKET;
 if (process.env.CITIZEN_STORAGE === 's3' && !S3_BUCKET) {
